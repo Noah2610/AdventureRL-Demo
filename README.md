@@ -1,8 +1,10 @@
 # AdventureRL
-Point-N-Click adventure game framework, using real video recordings as animations.
+This is a demo game, used while developing the [AdventureRL framework][framework-url].
 
 ---
 
 ___Work In Progress___
 
 ---
+
+[framework-url]: https://github.com/Noah2610/AdventureRL
