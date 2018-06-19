@@ -11,14 +11,14 @@ require 'byebug'
 ROOT = Pathname.new($0).realpath.dirname
 
 module Demo
-	DIR = {
-		src:      ROOT.join('game/src'),
-		settings: ROOT.join('game/settings.yml')
-	}
+  DIR = {
+    src:      ROOT.join('game/src'),
+    settings: ROOT.join('game/settings.yml')
+  }
 
-	require DIR[:src].join 'Game'
+  require DIR[:src].join 'Game'
 
-	SETTINGS = AdventureRL::Settings.new DIR[:settings]
-	GAME     = Game.new SETTINGS.get(:window)
-	GAME.show
+  SETTINGS = AdventureRL::Settings.new DIR[:settings]
+  GAME     = Game.new SETTINGS.get(:window)
+  GAME.show
 end
