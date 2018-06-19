@@ -19,6 +19,6 @@ module Demo
 	require DIR[:src].join 'Game'
 
 	SETTINGS = AdventureRL::Settings.new DIR[:settings]
-	GAME     = Game.new
+	GAME     = Game.new SETTINGS.get(:window)
 	GAME.show
 end
