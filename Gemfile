@@ -1,6 +1,6 @@
-source 'https://rubygems.org/'
+source 'https://rubygems.org'
 
-#gem 'adventure-rl', path: './framework'
+gem 'AdventureRL', path: '../AdventureRL'
 
 group :development do
 	gem 'awesome_print'

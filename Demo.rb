@@ -1,14 +1,14 @@
 #!/usr/bin/env ruby
 
-#require 'bundler'
-#Bundler.setup
+require 'bundler'
+Bundler.setup
+require 'AdventureRL'
 require 'pathname'
 # Development gems
 require 'awesome_print'
 require 'byebug'
 
 ROOT = Pathname.new($0).realpath.dirname
-require ROOT.join 'framework/Framework'  # AdventureRL Framework
 
 module Demo
 	DIR = {

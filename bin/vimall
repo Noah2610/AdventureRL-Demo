@@ -1,7 +1,5 @@
-#!/bin/bash
-
+#!/usr/bin/bash
 IFS=$'\n'
 files=('./README.md' './Gemfile' './bin/vimall' './vimrc' './game/settings.yml' './.gitignore')
 files_find=($( find . -iname '*.rb' ))
-
 vim +'source ./vimrc' ${files[@]} ${files_find[@]}
