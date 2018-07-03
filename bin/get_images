@@ -1,0 +1,12 @@
+#!/bin/bash
+
+root="$HOME/Projects/Ruby/Gosu/AdventureRL-Demo"
+video="$root/game/data/clips/videos/demo_one.mp4"
+base_pic_dir="$root/game/data/clips/one"
+scale="960:540"
+fps=30
+extension="png"
+pic_dir="${base_pic_dir}.$( echo -n "$scale" | sed s/:/x/ ).${fps}F.${extension}"
+
+mkdir -p $pic_dir
+ffmpeg -i $video -r $fps -vf scale=$scale ${pic_dir}/%4d.$extension

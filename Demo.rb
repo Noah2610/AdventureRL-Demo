@@ -13,7 +13,9 @@ ROOT = Pathname.new($0).realpath.dirname
 module Demo
   DIR = {
     src:      ROOT.join('game/src'),
-    settings: ROOT.join('game/settings.yml')
+    settings: ROOT.join('game/settings.yml'),
+    data:     ROOT.join('game/data'),
+    clips:    ROOT.join('game/data/clips')
   }
 
   require DIR[:src].join 'Game'

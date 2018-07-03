@@ -3,7 +3,5 @@
 .virb
 Gemfile.lock
 
-/game/data/clips/videos/*
-/game/data/clips/frames/*
-!/game/data/clips/videos/.keep
-!/game/data/clips/frames/.keep
+/game/data/clips/*
+!/game/data/clips/.keep
