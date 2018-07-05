@@ -7,7 +7,10 @@ module Demo
       AdventureRL::Clip.root = DIR[:clips]
       AdventureRL::Clip.default_settings = DIR[:clips].join 'default.yml'
       clip_settings = DIR[:clips].join 'one.yml'
-      @clip = AdventureRL::Clip.new clip_settings
+      @clip         = AdventureRL::Clip.new clip_settings
+      @cplayer      = AdventureRL::ClipPlayer.new
+      @cplayer     << @clip
+      @cplayer.play :one
     end
 
     private
@@ -24,11 +27,12 @@ module Demo
     end
 
     def update
-      puts get_fps  if (get_tick % get_fps == 0)  unless (get_fps == 0)
+      #puts get_fps  if (get_tick % get_fps == 0)  unless (get_fps == 0)
       super  # Call AdventureRL::Window's #update method to be able to use a bunch of methods.
     end
 
     def draw
+      @cplayer.draw
     end
   end
 end
