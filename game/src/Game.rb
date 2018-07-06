@@ -6,24 +6,14 @@ module Demo
       # or an empty hash if none were passed
       AdventureRL::Clip.root = DIR[:clips]
       AdventureRL::Clip.default_settings = DIR[:clips].join 'default.yml'
-      clip_one      = AdventureRL::Clip.new DIR[:clips].join('one.yml')
-      clip_samsung  = AdventureRL::Clip.new DIR[:clips].join('samsung_color.yml')
-      clip_ink      = AdventureRL::Clip.new DIR[:clips].join('ink.yml')
-      @cplayer_one  = AdventureRL::ClipPlayer.new({
+      clip_one     = AdventureRL::Clip.new DIR[:clips].join('one.yml')
+      clip_samsung = AdventureRL::Clip.new DIR[:clips].join('samsung_color.yml')
+      clip_ink     = AdventureRL::Clip.new DIR[:clips].join('ink.yml')
+      @cplayers    = []
+      @cplayers << AdventureRL::ClipPlayer.new({
         mask: {
           position: {
-            x: 0, y: 0
-          },
-          size: {
-            width:  (get_size(:width) * 0.5).floor,
-            height: get_size(:height)
-          }
-        }
-      })
-      @cplayer_two = AdventureRL::ClipPlayer.new({
-        mask: {
-          position: {
-            x: (get_size(:width) * 0.5).ceil,
+            x: 0,
             y: 0
           },
           size: {
@@ -32,7 +22,55 @@ module Demo
           }
         }
       })
-      @cplayer_three = AdventureRL::ClipPlayer.new({
+      @cplayers << AdventureRL::ClipPlayer.new({
+        mask: {
+          position: {
+            x: 0,
+            y: (get_size(:height) * 0.5).ceil
+          },
+          size: {
+            width:  (get_size(:width)  * 0.25).floor,
+            height: (get_size(:height) * 0.5).floor
+          }
+        }
+      })
+      @cplayers << AdventureRL::ClipPlayer.new({
+        mask: {
+          position: {
+            x: (get_size(:width)  * 0.25).ceil,
+            y: (get_size(:height) * 0.5).ceil
+          },
+          size: {
+            width:  (get_size(:width)  * 0.25).floor,
+            height: (get_size(:height) * 0.5).floor
+          }
+        }
+      })
+      @cplayers << AdventureRL::ClipPlayer.new({
+        mask: {
+          position: {
+            x: (get_size(:width) * 0.5).ceil,
+            y: 0
+          },
+          size: {
+            width:  (get_size(:width)  * 0.5).floor,
+            height: (get_size(:height) * 0.25).floor
+          }
+        }
+      })
+      @cplayers << AdventureRL::ClipPlayer.new({
+        mask: {
+          position: {
+            x: (get_size(:width) * 0.5).ceil,
+            y: (get_size(:height) * 0.25).ceil
+          },
+          size: {
+            width:  (get_size(:width)  * 0.5).floor,
+            height: (get_size(:height) * 0.25).floor
+          }
+        }
+      })
+      @cplayers << AdventureRL::ClipPlayer.new({
         mask: {
           position: {
             x: (get_size(:width) * 0.5).ceil,
@@ -40,13 +78,45 @@ module Demo
           },
           size: {
             width:  (get_size(:width)  * 0.5).floor,
-            height: (get_size(:height) * 0.5).floor
+            height: (get_size(:height) * 0.25).floor
           }
         }
       })
-      @cplayer_one.play   clip_one
-      @cplayer_two.play   clip_samsung
-      @cplayer_three.play clip_ink
+      @cplayers << AdventureRL::ClipPlayer.new({
+        mask: {
+          position: {
+            x: (get_size(:width) * 0.5).ceil,
+            y: (get_size(:height) * 0.75).ceil
+          },
+          size: {
+            width:  (get_size(:width)  * 0.25).floor,
+            height: (get_size(:height) * 0.25).floor
+          }
+        }
+      })
+      @cplayers << AdventureRL::ClipPlayer.new({
+        mask: {
+          position: {
+            x: (get_size(:width) * 0.75).ceil,
+            y: (get_size(:height) * 0.75).ceil
+          },
+          size: {
+            width:  (get_size(:width)  * 0.25).floor,
+            height: (get_size(:height) * 0.25).floor
+          }
+        }
+      })
+      @cplayers.each.with_index do |cplayer, index|
+        cplayer.increment_speed_by 0.25 * index
+      end
+      @cplayers[0].play clip_one
+      @cplayers[1].play clip_samsung
+      @cplayers[2].play clip_ink
+      @cplayers[3].play clip_ink
+      @cplayers[4].play clip_samsung
+      @cplayers[5].play clip_one
+      @cplayers[6].play clip_samsung
+      @cplayers[7].play clip_ink
     end
 
     private
@@ -56,29 +126,22 @@ module Demo
     end
 
     def button_down btnid
-      seek_secs = 10
+      seek_secs  = 10
+      speed_incr = 0.25
       case btnid
       when Gosu::KB_Q, Gosu::KB_ESCAPE
         close
       when Gosu::KB_SPACE
-        if (Gosu.button_down? Gosu::KB_LEFT_SHIFT)
-          @cplayer_two.toggle
-        else
-          @cplayer_one.toggle
-        end
+        @cplayers.each &:toggle
       when Gosu::KB_L, Gosu::KB_RIGHT
-        @cplayer_one.seek seek_secs
+        @cplayers.each { |cp| cp.seek seek_secs }
       when Gosu::KB_H, Gosu::KB_LEFT
-        @cplayer_one.seek -seek_secs
-      when Gosu::KB_K, Gosu::KB_UP
-        @cplayer_two.seek seek_secs
-      when Gosu::KB_J, Gosu::KB_DOWN
-        @cplayer_two.seek -seek_secs
+        @cplayers.each { |cp| cp.seek seek_secs }
       when Gosu::KB_S
         if (Gosu.button_down? Gosu::KB_LEFT_SHIFT)
-          @cplayer_one.increment_speed_by -0.1
+          @cplayers.each { |cp| cp.increment_speed_by -speed_incr }
         else
-          @cplayer_one.increment_speed_by 0.1
+          @cplayers.each { |cp| cp.increment_speed_by speed_incr }
         end
       end
     end
@@ -91,7 +154,7 @@ module Demo
     end
 
     def draw
-      [@cplayer_one, @cplayer_two, @cplayer_three].each &:draw
+      @cplayers.each &:draw
     end
   end
 end
