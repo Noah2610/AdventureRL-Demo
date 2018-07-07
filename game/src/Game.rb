@@ -17,7 +17,7 @@ module Demo
             y: 0
           },
           size: {
-            width:  (get_size(:width)  * 0.5).floor,
+            width:  get_size(:width),
             height: (get_size(:height) * 0.5).floor
           }
         }
@@ -29,7 +29,7 @@ module Demo
             y: (get_size(:height) * 0.5).ceil
           },
           size: {
-            width:  (get_size(:width)  * 0.25).floor,
+            width:  (get_size(:width)  * 0.5).floor,
             height: (get_size(:height) * 0.5).floor
           }
         }
@@ -37,86 +37,22 @@ module Demo
       @cplayers << AdventureRL::ClipPlayer.new({
         mask: {
           position: {
-            x: (get_size(:width)  * 0.25).ceil,
+            x: (get_size(:width)  * 0.5).ceil,
             y: (get_size(:height) * 0.5).ceil
           },
           size: {
-            width:  (get_size(:width)  * 0.25).floor,
+            width:  (get_size(:width)  * 0.5).floor,
             height: (get_size(:height) * 0.5).floor
           }
         }
       })
-      @cplayers << AdventureRL::ClipPlayer.new({
-        mask: {
-          position: {
-            x: (get_size(:width) * 0.5).ceil,
-            y: 0
-          },
-          size: {
-            width:  (get_size(:width)  * 0.5).floor,
-            height: (get_size(:height) * 0.25).floor
-          }
-        }
-      })
-      @cplayers << AdventureRL::ClipPlayer.new({
-        mask: {
-          position: {
-            x: (get_size(:width) * 0.5).ceil,
-            y: (get_size(:height) * 0.25).ceil
-          },
-          size: {
-            width:  (get_size(:width)  * 0.5).floor,
-            height: (get_size(:height) * 0.25).floor
-          }
-        }
-      })
-      @cplayers << AdventureRL::ClipPlayer.new({
-        mask: {
-          position: {
-            x: (get_size(:width) * 0.5).ceil,
-            y: (get_size(:height) * 0.5).ceil
-          },
-          size: {
-            width:  (get_size(:width)  * 0.5).floor,
-            height: (get_size(:height) * 0.25).floor
-          }
-        }
-      })
-      @cplayers << AdventureRL::ClipPlayer.new({
-        mask: {
-          position: {
-            x: (get_size(:width) * 0.5).ceil,
-            y: (get_size(:height) * 0.75).ceil
-          },
-          size: {
-            width:  (get_size(:width)  * 0.25).floor,
-            height: (get_size(:height) * 0.25).floor
-          }
-        }
-      })
-      @cplayers << AdventureRL::ClipPlayer.new({
-        mask: {
-          position: {
-            x: (get_size(:width) * 0.75).ceil,
-            y: (get_size(:height) * 0.75).ceil
-          },
-          size: {
-            width:  (get_size(:width)  * 0.25).floor,
-            height: (get_size(:height) * 0.25).floor
-          }
-        }
-      })
-      @cplayers.each.with_index do |cplayer, index|
-        cplayer.increment_speed_by 0.25 * index
-      end
       @cplayers[0].play clip_one
       @cplayers[1].play clip_samsung
       @cplayers[2].play clip_ink
-      @cplayers[3].play clip_ink
-      @cplayers[4].play clip_samsung
-      @cplayers[5].play clip_one
-      @cplayers[6].play clip_samsung
-      @cplayers[7].play clip_ink
+      #set_timeout  method: proc { 3.times { `espeak timeout` } }, seconds: 10, id: :espeak
+      #set_interval method: @cplayers[0].method(:toggle), seconds: 4, id: :toggle
+      set_interval method: proc { @cplayers.each { |cp| cp.increase_speed 0.5 } }, seconds: 0.25, id: :increase_speed
+      set_interval method: proc { puts "SPEED: #{@cplayers[0].get_speed}" }, seconds: 1, id: :puts_speed
     end
 
     private
@@ -139,15 +75,18 @@ module Demo
         @cplayers.each { |cp| cp.seek seek_secs }
       when Gosu::KB_S
         if (Gosu.button_down? Gosu::KB_LEFT_SHIFT)
-          @cplayers.each { |cp| cp.increment_speed_by -speed_incr }
+          @cplayers.each { |cp| cp.increase_speed -speed_incr }
         else
-          @cplayers.each { |cp| cp.increment_speed_by speed_incr }
+          @cplayers.each { |cp| cp.increase_speed speed_incr }
         end
+      when Gosu::KB_C
+        clear_interval :increase_speed
+        clear_interval :puts_speed
       end
     end
 
     def update
-      puts "FPS: #{get_fps}"
+      #puts "FPS: #{get_fps}"
       #puts "#{@cplayer.get_current_time} - #{get_fps}"
       #puts get_fps  if (get_tick % get_fps == 0)  unless (get_fps == 0)
       super  # Call AdventureRL::Window's #update method to be able to use a bunch of methods.
