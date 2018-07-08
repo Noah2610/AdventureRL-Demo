@@ -3,6 +3,10 @@
 .virb
 Gemfile.lock
 
-/game/data/*
+/game/data/clips/*
+/game/data/audio/*
+/game/data/videos/*
 !/game/data/*_configs/
 /ignore
+
+!.keep
