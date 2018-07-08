@@ -12,10 +12,13 @@ ROOT = Pathname.new($0).realpath.dirname
 
 module Demo
   DIR = {
-    src:      ROOT.join('game/src'),
-    settings: ROOT.join('game/settings.yml'),
-    data:     ROOT.join('game/data'),
-    clips:    ROOT.join('game/data/clips')
+    src:           ROOT.join('game/src'),
+    settings:      ROOT.join('game/settings.yml'),
+    data:          ROOT.join('game/data'),
+    clip_configs:  ROOT.join('game/data/clip_configs'),
+    audio_configs: ROOT.join('game/data/audio_configs'),
+    clips:         ROOT.join('game/data/clips'),
+    audio:         ROOT.join('game/data/audio')
   }
 
   require DIR[:src].join 'Game'

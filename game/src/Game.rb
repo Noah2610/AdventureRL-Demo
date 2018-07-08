@@ -4,13 +4,22 @@ module Demo
       # #setup will be called after #initialize
       # args are the arguments that were passed to #initialize,
       # or an empty hash if none were passed
+      puts get_mem
+
       AdventureRL::Clip.root = DIR[:clips]
-      AdventureRL::Clip.default_settings = DIR[:clips].join 'default.yml'
-      clip_one     = AdventureRL::Clip.new DIR[:clips].join('one.yml')
-      clip_samsung = AdventureRL::Clip.new DIR[:clips].join('samsung_color.yml')
-      clip_ink     = AdventureRL::Clip.new DIR[:clips].join('ink.yml')
-      @cplayers    = []
-      @cplayers << AdventureRL::ClipPlayer.new({
+      AdventureRL::Clip.default_settings = DIR[:clip_configs].join('default.yml')
+      #clip = AdventureRL::Clip.new DIR[:clip_configs].join('one.yml')
+      #clip = AdventureRL::Clip.new DIR[:clip_configs].join('samsung_color.yml')
+      #clip = AdventureRL::Clip.new DIR[:clip_configs].join('ink.yml')
+      clip = AdventureRL::Clip.new DIR[:clip_configs].join('america.yml')
+      #clip = AdventureRL::Clip.new DIR[:clip_configs].join('anime.yml')
+      #clip = AdventureRL::Clip.new DIR[:clip_configs].join('ultra.yml')
+
+      AdventureRL::Audio.root = DIR[:audio]
+      AdventureRL::Audio.default_settings = DIR[:audio_configs].join('default.yml')
+      audio = AdventureRL::Audio.new DIR[:audio_configs].join('america.yml')
+
+      @cplayer = AdventureRL::ClipPlayer.new({
         mask: {
           position: {
             x: 0,
@@ -18,41 +27,16 @@ module Demo
           },
           size: {
             width:  get_size(:width),
-            height: (get_size(:height) * 0.5).floor
+            height: get_size(:height)
           }
         }
       })
-      @cplayers << AdventureRL::ClipPlayer.new({
-        mask: {
-          position: {
-            x: 0,
-            y: (get_size(:height) * 0.5).ceil
-          },
-          size: {
-            width:  (get_size(:width)  * 0.5).floor,
-            height: (get_size(:height) * 0.5).floor
-          }
-        }
-      })
-      @cplayers << AdventureRL::ClipPlayer.new({
-        mask: {
-          position: {
-            x: (get_size(:width)  * 0.5).ceil,
-            y: (get_size(:height) * 0.5).ceil
-          },
-          size: {
-            width:  (get_size(:width)  * 0.5).floor,
-            height: (get_size(:height) * 0.5).floor
-          }
-        }
-      })
-      @cplayers[0].play clip_one
-      @cplayers[1].play clip_samsung
-      @cplayers[2].play clip_ink
-      #set_timeout  method: proc { 3.times { `espeak timeout` } }, seconds: 10, id: :espeak
-      #set_interval method: @cplayers[0].method(:toggle), seconds: 4, id: :toggle
-      set_interval method: proc { @cplayers.each { |cp| cp.increase_speed 0.5 } }, seconds: 0.25, id: :increase_speed
-      set_interval method: proc { puts "SPEED: #{@cplayers[0].get_speed}" }, seconds: 1, id: :puts_speed
+      @aplayer = AdventureRL::AudioPlayer.new
+
+      @cplayer.play clip
+      @aplayer.play audio
+
+      puts get_mem
     end
 
     private
@@ -68,16 +52,16 @@ module Demo
       when Gosu::KB_Q, Gosu::KB_ESCAPE
         close
       when Gosu::KB_SPACE
-        @cplayers.each &:toggle
+        @cplayer.toggle
       when Gosu::KB_L, Gosu::KB_RIGHT
-        @cplayers.each { |cp| cp.seek seek_secs }
+        @cplayer.seek seek_secs
       when Gosu::KB_H, Gosu::KB_LEFT
-        @cplayers.each { |cp| cp.seek seek_secs }
+        @cplayer.seek -seek_secs
       when Gosu::KB_S
         if (Gosu.button_down? Gosu::KB_LEFT_SHIFT)
-          @cplayers.each { |cp| cp.increase_speed -speed_incr }
+          @cplayer.increase_speed -speed_incr
         else
-          @cplayers.each { |cp| cp.increase_speed speed_incr }
+          @cplayer.increase_speed speed_incr
         end
       when Gosu::KB_C
         clear_interval :increase_speed
@@ -86,6 +70,10 @@ module Demo
     end
 
     def update
+      @cplayer.update
+      @aplayer.update
+      #puts get_mem  if (get_tick % get_fps == 0)  unless (get_fps == 0)
+
       #puts "FPS: #{get_fps}"
       #puts "#{@cplayer.get_current_time} - #{get_fps}"
       #puts get_fps  if (get_tick % get_fps == 0)  unless (get_fps == 0)
@@ -93,7 +81,14 @@ module Demo
     end
 
     def draw
-      @cplayers.each &:draw
+      @cplayer.draw
     end
+
+    private
+
+      def get_mem
+        free = `free -h`.strip.split ?\n
+        return free[1].split(' ')[2]
+      end
   end
 end

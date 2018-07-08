@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+require 'pathname'
+
+root             = Pathname.new($0).realpath.dirname.join('..')
+audio_file       = root.join 'game/data/audio/america.flac'
+base_dir         = root.join 'game/data/audio/america'
+fps              = 10
+extension        = 'flac'
+dir              = "#{base_dir}.#{fps}F.#{extension}"
+total_duration   = `mediainfo --Inform='Audio;%Duration%' #{audio_file}`.strip.to_f / 1000.0
+segment_duration = 1.0 / fps.to_f
+loop_amount      = (total_duration.to_f / segment_duration.to_f).ceil
+`mkdir -p #{dir}`
+
+loop_amount.times do |n|
+  start = segment_duration * n
+  `ffmpeg -ss #{start} -i #{audio_file} -t #{segment_duration} #{dir}/#{n.to_s.rjust(4,?0)}.#{extension}`
+end

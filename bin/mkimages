@@ -1,8 +1,8 @@
 #!/bin/bash
 
 root="$HOME/Projects/Ruby/Gosu/AdventureRL-Demo"
-video="$root/game/data/clips/videos/demo_one.mp4"
-base_pic_dir="$root/game/data/clips/one"
+video="$root/game/data/clips/videos/ultra.webm"
+base_pic_dir="$root/game/data/clips/ultra"
 scale="960:540"
 fps=30
 extension="png"
