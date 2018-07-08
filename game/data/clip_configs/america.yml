@@ -1,2 +1,6 @@
 name:      :america
 directory: america.960x540.30F.png
+audio:
+  name:      :america
+  directory: america.10F.flac
+  fps:       10

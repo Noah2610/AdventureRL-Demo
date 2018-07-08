@@ -4,20 +4,12 @@ module Demo
       # #setup will be called after #initialize
       # args are the arguments that were passed to #initialize,
       # or an empty hash if none were passed
-      puts get_mem
-
       AdventureRL::Clip.root = DIR[:clips]
       AdventureRL::Clip.default_settings = DIR[:clip_configs].join('default.yml')
-      #clip = AdventureRL::Clip.new DIR[:clip_configs].join('one.yml')
-      #clip = AdventureRL::Clip.new DIR[:clip_configs].join('samsung_color.yml')
-      #clip = AdventureRL::Clip.new DIR[:clip_configs].join('ink.yml')
-      clip = AdventureRL::Clip.new DIR[:clip_configs].join('america.yml')
-      #clip = AdventureRL::Clip.new DIR[:clip_configs].join('anime.yml')
-      #clip = AdventureRL::Clip.new DIR[:clip_configs].join('ultra.yml')
-
       AdventureRL::Audio.root = DIR[:audio]
       AdventureRL::Audio.default_settings = DIR[:audio_configs].join('default.yml')
-      audio = AdventureRL::Audio.new DIR[:audio_configs].join('america.yml')
+
+      clip = AdventureRL::Clip.new DIR[:clip_configs].join('anime.yml')
 
       @cplayer = AdventureRL::ClipPlayer.new({
         mask: {
@@ -31,12 +23,8 @@ module Demo
           }
         }
       })
-      @aplayer = AdventureRL::AudioPlayer.new
 
       @cplayer.play clip
-      @aplayer.play audio
-
-      puts get_mem
     end
 
     private
@@ -63,20 +51,13 @@ module Demo
         else
           @cplayer.increase_speed speed_incr
         end
-      when Gosu::KB_C
-        clear_interval :increase_speed
-        clear_interval :puts_speed
+      when Gosu::KB_F
+        toggle_fullscreen
       end
     end
 
     def update
       @cplayer.update
-      @aplayer.update
-      #puts get_mem  if (get_tick % get_fps == 0)  unless (get_fps == 0)
-
-      #puts "FPS: #{get_fps}"
-      #puts "#{@cplayer.get_current_time} - #{get_fps}"
-      #puts get_fps  if (get_tick % get_fps == 0)  unless (get_fps == 0)
       super  # Call AdventureRL::Window's #update method to be able to use a bunch of methods.
     end
 
