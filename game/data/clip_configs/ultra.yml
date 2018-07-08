@@ -1,3 +1,6 @@
 name:      :ultra
 directory: ultra.960x540.30F.png
-audio:     audio/ultra.ogg
+audio:
+  name:      :ultra
+  directory: ultra.0.125F.flac
+  fps:       0.125

@@ -9,9 +9,10 @@ module Demo
       AdventureRL::Audio.root = DIR[:audio]
       AdventureRL::Audio.default_settings = DIR[:audio_configs].join('default.yml')
 
-      clip = AdventureRL::Clip.new DIR[:clip_configs].join('anime.yml')
+      clip = AdventureRL::Clip.new DIR[:clip_configs].join('america.yml')
 
       @cplayer = AdventureRL::ClipPlayer.new({
+        speed: 1,
         mask: {
           position: {
             x: 0,
@@ -25,6 +26,10 @@ module Demo
       })
 
       @cplayer.play clip
+
+      set_interval seconds: 1 do
+        puts @cplayer.get_audio_player.get_speed
+      end
     end
 
     private
@@ -34,7 +39,7 @@ module Demo
     end
 
     def button_down btnid
-      seek_secs  = 10
+      seek_secs  = 4
       speed_incr = 0.25
       case btnid
       when Gosu::KB_Q, Gosu::KB_ESCAPE
@@ -45,6 +50,10 @@ module Demo
         @cplayer.seek seek_secs
       when Gosu::KB_H, Gosu::KB_LEFT
         @cplayer.seek -seek_secs
+      when Gosu::KB_K, Gosu::KB_UP
+        @cplayer.increase_speed speed_incr
+      when Gosu::KB_J, Gosu::KB_DOWN
+        @cplayer.increase_speed -speed_incr
       when Gosu::KB_S
         if (Gosu.button_down? Gosu::KB_LEFT_SHIFT)
           @cplayer.increase_speed -speed_incr
