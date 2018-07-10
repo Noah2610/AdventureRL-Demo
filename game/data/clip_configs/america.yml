@@ -4,3 +4,4 @@ audio:
   name:      :america
   directory: america.10F.flac
   fps:       10
+  volume:    1.0
