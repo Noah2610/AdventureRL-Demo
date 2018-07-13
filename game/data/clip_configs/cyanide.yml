@@ -1,0 +1,7 @@
+name:      :cyanide
+directory: cyanide.960x540.30F.png
+fps:       30
+audio:
+  name:      :cyanide
+  directory: cyanide.1F.flac
+  fps:       1

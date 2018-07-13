@@ -1,9 +1,9 @@
 ---
 window:
-  size:
-    width:  960
-    height: 540
   caption:    'AdventureRL Demo Game!'
   fps:        60
   fullscreen: false
+  size:
+    width:  960
+    height: 540
 ...

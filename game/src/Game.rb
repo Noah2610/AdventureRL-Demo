@@ -11,9 +11,9 @@ module Demo
       AdventureRL::Audio.root = DIR[:audio]
       AdventureRL::Audio.default_settings = DIR[:audio_configs].join('default.yml')
 
-      clip = AdventureRL::Clip.new DIR[:clip_configs].join('america.yml')
+      clip = AdventureRL::Clip.new DIR[:clip_configs].join('cyanide.yml')
 
-      @cplayer = AdventureRL::ClipPlayer.new({
+      @cplayer = AdventureRL::ClipPlayer.new(
         speed: 1,
         mask: {
           position: {
@@ -25,81 +25,44 @@ module Demo
             height: get_size(:height)
           }
         }
-      })
+      )
 
       @cplayer.play clip
       add @cplayer
 
-      rect = AdventureRL::Rectangle.new(
-        {
+      rect_size = {
+        width:  196,
+        height: 196
+      }
+      @layer = AdventureRL::Layer.new(
+        mask: {
           position: {
-            x: 16,
-            y: 16
+            x: get_center.x,
+            y: get_center.y
           },
-          size: {
-            width: 32,
-            height: 32
-          },
-        },
-        z_index: 10,
-        color: 0xff_ff0000
-      )
-      @layer = AdventureRL::Layer.new({
-        position: {
-          x: 128,
-          y: 64
-        },
-        size: {
-          width:  128,
-          height: 128
-        },
-        origin: {
-          x: :center,
-          y: :center
+          size: rect_size,
+          origin: {
+            x: :center,
+            y: :center
+          }
         }
-      })
+      )
+      @rect = AdventureRL::Rectangle.new(
+        mask: {
+          size: rect_size,
+          mouse_events: true
+        },
+        color: 0x99_00ff44
+      )
+      @rect.define_singleton_method(:on_mouse_press) do |btnid|
+        puts btnid
+      end
+
+      @layer.add @rect
       add @layer
-      @layer.add rect
-      add rect
 
-      @interval_sec = 0.001
-      @scale_dir = -1
-      @max_scale_count = 50
-      @scale_count = @max_scale_count
-      @scale_step = 0.01
-      set_interval seconds: @interval_sec do
-        scale_by = @scale_step * @scale_dir
-        increase_scale :x, scale_by
-        increase_scale :y, scale_by
-        @scale_count += @scale_dir
-        @scale_dir *= -1  if ([0, @max_scale_count].include?(@scale_count))
-      end
-
-      @move_axis = :x
-      @move_dir = 1
-      @max_move_count = 100
-      @move_count = ((@max_move_count.to_f / 100.0) * 50).round
-      @move_step = 100
-      set_interval seconds: @interval_sec do
-        move_by @move_axis => (@move_step * get_dt) * @move_dir
-        @move_count += 1
-        if (@move_count > @max_move_count)
-          case @move_axis
-          when :x
-            @move_axis = :y
-          when :y
-            @move_axis = :x
-            @move_dir *= -1
-          end
-          @move_count = 0
-        end
-      end
-
-      @rot_step = 2
-      set_interval seconds: @interval_sec do
-        increase_rotation @rot_step
-      end
-
+      @angle_incr = 180
+      @scale_incr = 1
     end
 
     private
@@ -108,12 +71,16 @@ module Demo
         return true
       end
 
+      # Call <tt>super</tt> for AdventureRL framework button events to work.
       def button_down btnid
+        super
         seek_secs  = 4
-        speed_incr = 0.25
+        speed_incr = 0.1
         case btnid
         when Gosu::KB_Q, Gosu::KB_ESCAPE
           close
+        when Gosu::KB_F
+          toggle_fullscreen
         when Gosu::KB_SPACE
           @cplayer.toggle
         when Gosu::KB_L, Gosu::KB_RIGHT
@@ -124,20 +91,23 @@ module Demo
           @cplayer.increase_speed speed_incr
         when Gosu::KB_J, Gosu::KB_DOWN
           @cplayer.increase_speed -speed_incr
-        when Gosu::KB_S
-          if (Gosu.button_down? Gosu::KB_LEFT_SHIFT)
-            @cplayer.increase_speed -speed_incr
-          else
-            @cplayer.increase_speed speed_incr
-          end
-        when Gosu::KB_F
-          toggle_fullscreen
         end
       end
 
       def update
         super  # Call AdventureRL::Window's #update method to be able to use a bunch of methods.
-        @layer.move_to x: mouse_x, y: mouse_y
+        dt = get_dt
+        #@layer.move_to x: mouse_x, y: mouse_y
+        increase_rotation  @angle_incr * dt      if (Gosu.button_down? Gosu::KB_D)
+        increase_rotation -@angle_incr * dt      if (Gosu.button_down? Gosu::KB_A)
+        if (Gosu.button_down? Gosu::KB_W)
+          increase_scale :x, @scale_incr * dt
+          increase_scale :y, @scale_incr * dt
+        end
+        if (Gosu.button_down? Gosu::KB_S)
+          increase_scale :x, -@scale_incr * dt
+          increase_scale :y, -@scale_incr * dt
+        end
       end
 
       def draw
