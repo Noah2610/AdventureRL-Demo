@@ -11,7 +11,7 @@ module Demo
       AdventureRL::Audio.root = DIR[:audio]
       AdventureRL::Audio.default_settings = DIR[:audio_configs].join('default.yml')
 
-      clip = AdventureRL::Clip.new DIR[:clip_configs].join('cyanide.yml')
+      clip = AdventureRL::Clip.new DIR[:clip_configs].join('america.yml')
 
       @cplayer = AdventureRL::ClipPlayer.new(
         speed: 1,
