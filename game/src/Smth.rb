@@ -5,18 +5,45 @@ module Demo
     def setup settings
       Clip.root  = DIR[:clips]
       Audio.root = DIR[:audio]
+      Clip.default_settings = DIR[:clip_configs].join('default.yml')
       $cplayer = ClipPlayer.new(
+        mask: {
+          position: {
+            x: get_size(:width)  * 0.5,
+            y: get_size(:height) * 0.5,
+          },
+          size: get_size,
+          origin: {
+            x: :center,
+            y: :center
+          }
+        }
+      )
+      $clip_configs = [
+        DIR[:clip_configs].join('america.yml'),
+        DIR[:clip_configs].join('samsung_color.yml'),
+        DIR[:clip_configs].join('cyanide.yml'),
+        DIR[:clip_configs].join('anime.yml')
+      ]
+      $clips = []
+      $clip_layer = Layer.new(
+        mask: {
+          position: {
+            x: get_size(:width)  * 0.5,
+            y: get_size(:height) * 0.5
+          },
+          size: get_size,
+          origin: {
+            x: :center,
+            y: :center
+          }
+        }
+      )
+      $btns_layer = Layer.new(
         mask: {
           size: get_size
         }
       )
-      $clips = [
-        Clip.new(DIR[:clip_configs].join('america.yml')),
-        #Clip.new(DIR[:clip_configs].join('samsung_color.yml')),
-        #Clip.new(DIR[:clip_configs].join('cyanide.yml')),
-        #Clip.new(DIR[:clip_configs].join('anime.yml')),
-        #Clip.new(DIR[:clip_configs].join('ultra.yml')),
-      ]
       btn_size = {
         width:  64,
         height: 64
@@ -66,7 +93,22 @@ module Demo
             },
             mouse_events: true
           },
-          color: 0x88_0000ff
+          color: 0x88_00ff00
+        ),
+        Rectangle.new(
+          mask: {
+            position: {
+              x: (get_size(:width) - padding) - (btn_size[:width] + padding),
+              y: (get_size(:height) - padding)
+            },
+            size: btn_size,
+            origin: {
+              x: :right,
+              y: :bottom
+            },
+            mouse_events: true
+          },
+          color: 0x88_ffff00
         ),
         Rectangle.new(
           mask: {
@@ -81,43 +123,114 @@ module Demo
             },
             mouse_events: true
           },
-          color: 0x88_0000ff
+          color: 0x88_ffff00
+        ),
+        Rectangle.new(
+          mask: {
+            position: {
+              x: (get_size(:width) * 0.5) - (padding * 0.5),
+              y: get_size(:height) - padding
+            },
+            size: {
+              width:  btn_size[:width],
+              height: btn_size[:height] * 2
+            },
+            origin: {
+              x: :right,
+              y: :bottom
+            },
+            mouse_events: true
+          },
+          color: 0x88_00ffff
+        ),
+        Rectangle.new(
+          mask: {
+            position: {
+              x: (get_size(:width) * 0.5) + (padding * 0.5),
+              y: get_size(:height) - padding
+            },
+            size: {
+              width:  btn_size[:width],
+              height: btn_size[:height] * 2
+            },
+            origin: {
+              x: :left,
+              y: :bottom
+            },
+            mouse_events: true
+          },
+          color: 0x88_ffcc66
         )
       ]
 
       $current_clip = 0
+      $clips[0] = Clip.new $clip_configs[0]
       $cplayer.play $clips[0]
+      $speed_step = 0.025
+      $seek_step  = 4
+      $scale_step = 0.1
 
-      add $cplayer
+      $clip_layer.add $cplayer
+      add $clip_layer
+      add $btns_layer
+
       @btns.each.with_index do |btn, index|
-        case index % 4
+        case index % @btns.size
         when 0
           btn.define_singleton_method :on_mouse_down do |btnid|
             $current_clip -= 1
-            $current_clip = $clips.size + $current_clip  if ($current_clip < 0)
+            $current_clip = $clip_configs.size + $current_clip             if ($current_clip < 0)
+            $clips[$current_clip] = Clip.new $clip_configs[$current_clip]  unless ($clips[$current_clip])
             $cplayer.play $clips[$current_clip]
           end
         when 1
           btn.define_singleton_method :on_mouse_down do |btnid|
             $current_clip += 1
-            $current_clip = $current_clip - $clips.size  if ($current_clip >= $clips.size)
+            $current_clip = $current_clip - $clip_configs.size             if ($current_clip >= $clip_configs.size)
+            $clips[$current_clip] = Clip.new $clip_configs[$current_clip]  unless ($clips[$current_clip])
             $cplayer.play $clips[$current_clip]
           end
         when 2
           btn.define_singleton_method :on_mouse_down do |btnid|
-            $cplayer.pause  if ($cplayer.is_playing?)
+            $cplayer.toggle        if ($cplayer.has_filegroup?)
+            set_color 0x88_ff0000  if (!$cplayer.is_playing?)
+            set_color 0x88_00ff00  if ($cplayer.is_playing?)
           end
         when 3
           btn.define_singleton_method :on_mouse_down do |btnid|
-            $cplayer.resume  if ($cplayer.has_filegroup?)
+            $cplayer.seek -$seek_step  if ($cplayer.has_filegroup?)
+          end
+        when 4
+          btn.define_singleton_method :on_mouse_down do |btnid|
+            $cplayer.seek $seek_step   if ($cplayer.has_filegroup?)
+          end
+        when 5
+          btn.define_singleton_method :on_mouse_down do |btnid|
+            case btnid
+            when Gosu::MS_WHEEL_UP
+              $cplayer.increase_speed $speed_step
+            when Gosu::MS_WHEEL_DOWN
+              $cplayer.increase_speed -$speed_step
+            when Gosu::MS_LEFT
+              $cplayer.set_speed 1.0
+            end
+          end
+        when 6
+          btn.define_singleton_method :on_mouse_down do |btnid|
+            case btnid
+            when Gosu::MS_WHEEL_UP
+              $clip_layer.increase_scale :x, $scale_step
+              $clip_layer.increase_scale :y, $scale_step
+            when Gosu::MS_WHEEL_DOWN
+              $clip_layer.increase_scale :x, -$scale_step
+              $clip_layer.increase_scale :y, -$scale_step
+            when Gosu::MS_LEFT
+              $clip_layer.set_scale :x, 1.0
+              $clip_layer.set_scale :y, 1.0
+            end
           end
         end
-        add btn
-      end
-
-      set_interval seconds: 0.5 do
-        puts "clip:  #{$cplayer.get_current_time}"
-        puts "audio: #{$cplayer.get_audio_player.get_current_time}"
+        $btns_layer << btn
       end
 
     end
