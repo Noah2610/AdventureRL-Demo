@@ -8,5 +8,6 @@ Gemfile.lock
 /game/data/videos/*
 !/game/data/*_configs/
 /ignore
+*.zip
 
 !.keep
