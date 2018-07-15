@@ -1,24 +1,25 @@
 #!/usr/bin/env ruby
 
-require 'bundler'
-Bundler.setup
-require 'AdventureRL'
+#require 'bundler'
+#Bundler.setup
 require 'pathname'
 # Development gems
-require 'awesome_print'
+#require 'awesome_print'
 require 'byebug'
 
 ROOT = Pathname.new($0).realpath.dirname
+
+require ROOT.join '../AdventureRL/lib/AdventureRL.rb'
 
 module Demo
   DIR = {
     src:           ROOT.join('game/src'),
     settings:      ROOT.join('game/settings.yml'),
-    data:          ROOT.join('game/data'),
-    clip_configs:  ROOT.join('game/data/clip_configs'),
-    audio_configs: ROOT.join('game/data/audio_configs'),
-    clips:         ROOT.join('game/data/clips'),
-    audio:         ROOT.join('game/data/audio')
+    data:          Pathname.new('./data'),
+    clip_configs:  Pathname.new('./data/clip_configs'),
+    audio_configs: Pathname.new('./data/audio_configs'),
+    clips:         Pathname.new('./data/clips'),
+    audio:         Pathname.new('./data/audio')
   }
 
   require DIR[:src].join 'Game'

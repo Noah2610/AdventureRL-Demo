@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 
-gem 'AdventureRL', path: '../AdventureRL'
+#gem 'AdventureRL', path: '../AdventureRL'
+
+gem 'gosu'
 
 group :development do
   gem 'awesome_print'

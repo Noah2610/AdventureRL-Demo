@@ -1,0 +1,21 @@
+#!/bin/bash
+
+IFS=$'\n'
+root="$( cd "$( dirname $0 )/.."; pwd )"
+fw_root="$( cd "${root}/../AdventureRL"; pwd )"
+output_file="${root}/Demo.exe"
+entry_file="${root}/Demo.rb"
+gemfile="${root}/Gemfile"
+files=(
+  #"${root}/game/settings.yml"
+  $gemfile
+)
+files_find=($(
+  find "${root}/game" "${fw_root}/lib" \
+    -type f -a \(                      \
+      -iname '*.rb'                 -o \
+      -iname '*.yml'                   \
+    \)
+))
+
+ocra --windows --gemfile $gemfile --output $output_file $entry_file ${files[@]} ${files_find[@]}
