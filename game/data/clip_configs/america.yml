@@ -1,8 +1,6 @@
 name:      :america
-directory: america.960x540.30F.png
-fps:       30
+directory: america.960x540.24F.2Q.jpg
 audio:
   name:      :america
   directory: america.1F.flac
   fps:       1
-  volume:    1.0

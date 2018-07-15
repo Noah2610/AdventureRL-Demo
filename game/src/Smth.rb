@@ -5,7 +5,8 @@ module Demo
     def setup settings
       Clip.root  = DIR[:clips]
       Audio.root = DIR[:audio]
-      Clip.default_settings = DIR[:clip_configs].join('default.yml')
+      Clip.default_settings  = DIR[:clip_configs].join('default.yml')
+      Audio.default_settings = DIR[:audio_configs].join('default.yml')
       $cplayer = ClipPlayer.new(
         mask: {
           position: {
@@ -21,7 +22,7 @@ module Demo
       )
       $clip_configs = [
         DIR[:clip_configs].join('america.yml'),
-        DIR[:clip_configs].join('samsung_color.yml'),
+        DIR[:clip_configs].join('samsung.yml'),
         DIR[:clip_configs].join('cyanide.yml'),
         DIR[:clip_configs].join('anime.yml')
       ]

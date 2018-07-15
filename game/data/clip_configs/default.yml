@@ -1,1 +1,4 @@
-fps:  30
+fps:  24
+audio:
+  fps: 1
+  volume: 1.0

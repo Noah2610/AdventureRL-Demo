@@ -1,6 +1,6 @@
 name:      :anime
-directory: anime.960x540.30F.png
+directory: anime.960x540.24F.2Q.jpg
 audio:
   name:      :anime
-  directory: anime.5F.flac
-  fps:       5
+  directory: anime.1F.flac
+  fps:       1

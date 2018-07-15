@@ -1,0 +1,6 @@
+name:      :samsung
+directory: samsung.960x540.24F.2Q.jpg
+audio:
+  name:      :samsung
+  directory: samsung.1F.flac
+  fps:       1

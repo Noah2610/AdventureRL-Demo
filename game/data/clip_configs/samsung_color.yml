@@ -1,6 +1,0 @@
-name:      :samsung
-directory: samsung_color.960x540.30F.png
-audio:
-  name: :samsung
-  directory: samsung_color.1F.flac
-  fps: 1
