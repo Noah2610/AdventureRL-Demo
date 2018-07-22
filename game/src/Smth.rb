@@ -36,8 +36,7 @@ module Demo
           size: get_size,
           origin: {
             x: :center,
-            y: :center
-          }
+            y: :center }
         }
       )
       $btns_layer = Layer.new(
@@ -52,114 +51,100 @@ module Demo
       padding = 32
       @btns = [
         Rectangle.new(
-          mask: {
-            position: {
-              x: padding,
-              y: padding
-            },
-            size: btn_size,
-            origin: {
-              x: :left,
-              y: :top
-            },
-            mouse_events: true
+          position: {
+            x: padding,
+            y: padding
           },
+          size: btn_size,
+          origin: {
+            x: :left,
+            y: :top
+          },
+          mouse_events: true,
           color: 0x88_0000ff
         ),
         Rectangle.new(
-          mask: {
-            position: {
-              x: get_size(:width) - padding,
-              y: padding
-            },
-            size: btn_size,
-            origin: {
-              x: :right,
-              y: :top
-            },
-            mouse_events: true
+          position: {
+            x: get_size(:width) - padding,
+            y: padding
           },
+          size: btn_size,
+          origin: {
+            x: :right,
+            y: :top
+          },
+          mouse_events: true,
           color: 0x88_0000ff
         ),
         Rectangle.new(
-          mask: {
-            position: {
-              x: padding,
-              y: get_size(:height) - padding
-            },
-            size: btn_size,
-            origin: {
-              x: :left,
-              y: :bottom
-            },
-            mouse_events: true
+          position: {
+            x: padding,
+            y: get_size(:height) - padding
           },
+          size: btn_size,
+          origin: {
+            x: :left,
+            y: :bottom
+          },
+          mouse_events: true,
           color: 0x88_00ff00
         ),
         Rectangle.new(
-          mask: {
-            position: {
-              x: (get_size(:width) - padding) - (btn_size[:width] + padding),
-              y: (get_size(:height) - padding)
-            },
-            size: btn_size,
-            origin: {
-              x: :right,
-              y: :bottom
-            },
-            mouse_events: true
+          position: {
+            x: (get_size(:width) - padding) - (btn_size[:width] + padding),
+            y: (get_size(:height) - padding)
           },
+          size: btn_size,
+          origin: {
+            x: :right,
+            y: :bottom
+          },
+          mouse_events: true,
           color: 0x88_ffff00
         ),
         Rectangle.new(
-          mask: {
-            position: {
-              x: get_size(:width)  - padding,
-              y: get_size(:height) - padding
-            },
-            size: btn_size,
-            origin: {
-              x: :right,
-              y: :bottom
-            },
-            mouse_events: true
+          position: {
+            x: get_size(:width)  - padding,
+            y: get_size(:height) - padding
           },
+          size: btn_size,
+          origin: {
+            x: :right,
+            y: :bottom
+          },
+          mouse_events: true,
           color: 0x88_ffff00
         ),
         Rectangle.new(
-          mask: {
-            position: {
-              x: (get_size(:width) * 0.5) - (padding * 0.5),
-              y: get_size(:height) - padding
-            },
-            size: {
-              width:  btn_size[:width],
-              height: btn_size[:height] * 2
-            },
-            origin: {
-              x: :right,
-              y: :bottom
-            },
-            mouse_events: true
+          position: {
+            x: (get_size(:width) * 0.5) - (padding * 0.5),
+            y: get_size(:height) - padding
           },
+          size: {
+            width:  btn_size[:width],
+            height: btn_size[:height] * 2
+          },
+          origin: {
+            x: :right,
+            y: :bottom
+          },
+          mouse_events: true,
           color: 0x88_00ffff
         ),
         Rectangle.new(
-          mask: {
-            position: {
-              x: (get_size(:width) * 0.5) + (padding * 0.5),
-              y: get_size(:height) - padding
-            },
-            size: {
-              width:  btn_size[:width],
-              height: btn_size[:height] * 2
-            },
-            origin: {
-              x: :left,
-              y: :bottom
-            },
-            mouse_events: true
+          position: {
+            x: (get_size(:width) * 0.5) + (padding * 0.5),
+            y: get_size(:height) - padding
           },
+          size: {
+            width:  btn_size[:width],
+            height: btn_size[:height] * 2
+          },
+          origin: {
+            x: :left,
+            y: :bottom
+          },
+          mouse_events: true,
           color: 0x88_ffcc66
         )
       ]
