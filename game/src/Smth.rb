@@ -8,16 +8,14 @@ module Demo
       Clip.default_settings  = DIR[:clip_configs].join('default.yml')
       Audio.default_settings = DIR[:audio_configs].join('default.yml')
       $cplayer = ClipPlayer.new(
-        mask: {
-          position: {
-            x: get_size(:width)  * 0.5,
-            y: get_size(:height) * 0.5,
-          },
-          size: get_size,
-          origin: {
-            x: :center,
-            y: :center
-          }
+        position: {
+          x: get_size(:width)  * 0.5,
+          y: get_size(:height) * 0.5,
+        },
+        size: get_size,
+        origin: {
+          x: :center,
+          y: :center
         }
       )
       $clip_configs = [
@@ -28,15 +26,14 @@ module Demo
       ]
       $clips = []
       $clip_layer = Layer.new(
-        mask: {
-          position: {
-            x: get_size(:width)  * 0.5,
-            y: get_size(:height) * 0.5
-          },
-          size: get_size,
-          origin: {
-            x: :center,
-            y: :center }
+        position: {
+          x: get_size(:width)  * 0.5,
+          y: get_size(:height) * 0.5
+        },
+        size: get_size,
+        origin: {
+          x: :center,
+          y: :center
         }
       )
       $btns_layer = Layer.new(
@@ -60,7 +57,6 @@ module Demo
             x: :left,
             y: :top
           },
-          mouse_events: true,
           color: 0x88_0000ff
         ),
         Rectangle.new(
@@ -73,7 +69,6 @@ module Demo
             x: :right,
             y: :top
           },
-          mouse_events: true,
           color: 0x88_0000ff
         ),
         Rectangle.new(
@@ -86,7 +81,6 @@ module Demo
             x: :left,
             y: :bottom
           },
-          mouse_events: true,
           color: 0x88_00ff00
         ),
         Rectangle.new(
@@ -99,7 +93,6 @@ module Demo
             x: :right,
             y: :bottom
           },
-          mouse_events: true,
           color: 0x88_ffff00
         ),
         Rectangle.new(
@@ -112,7 +105,6 @@ module Demo
             x: :right,
             y: :bottom
           },
-          mouse_events: true,
           color: 0x88_ffff00
         ),
         Rectangle.new(
@@ -128,7 +120,6 @@ module Demo
             x: :right,
             y: :bottom
           },
-          mouse_events: true,
           color: 0x88_00ffff
         ),
         Rectangle.new(
@@ -144,10 +135,13 @@ module Demo
             x: :left,
             y: :bottom
           },
-          mouse_events: true,
           color: 0x88_ffcc66
         )
       ]
+
+      @btns.each do |btn|
+        get_mouse_buttons_event_handler.subscribe btn
+      end
 
       $current_clip = 0
       $clips[0] = Clip.new $clip_configs[0]
@@ -193,24 +187,24 @@ module Demo
         when 5
           btn.define_singleton_method :on_mouse_down do |btnid|
             case btnid
-            when Gosu::MS_WHEEL_UP
+            when :wheel_up
               $cplayer.increase_speed $speed_step
-            when Gosu::MS_WHEEL_DOWN
+            when :wheel_down
               $cplayer.increase_speed -$speed_step
-            when Gosu::MS_LEFT
+            when :left
               $cplayer.set_speed 1.0
             end
           end
         when 6
           btn.define_singleton_method :on_mouse_down do |btnid|
             case btnid
-            when Gosu::MS_WHEEL_UP
+            when :wheel_up
               $clip_layer.increase_scale :x, $scale_step
               $clip_layer.increase_scale :y, $scale_step
-            when Gosu::MS_WHEEL_DOWN
+            when :wheel_down
               $clip_layer.increase_scale :x, -$scale_step
               $clip_layer.increase_scale :y, -$scale_step
-            when Gosu::MS_LEFT
+            when :left
               $clip_layer.set_scale :x, 1.0
               $clip_layer.set_scale :y, 1.0
             end
